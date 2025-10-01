@@ -1,15 +1,99 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>please bro no more html</title>
-    </head>
-    <body>
-        <h1>I do not like html</h1>
-        <p>Let me use pythonnnnnnnnn<br>
-            I have no idea what I'm doing here<br>
-            Like how do I make stuff look good</p>
-        <!-- <img src="aggro.png" alt="angry crab" style="width: 125px;height:auto;"> !-->
-        <img src="snek.gif" alt="snek gif" style="width:200px;height: auto;">
-        <p>wawa</p>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This website will SNAKE</title>
+</head>
+<body>
+    <h1>This website will SNAKE</h1>
+    <p1>Soo I am not good at html or css<br>
+        (and I do not like html)<br>
+        but I can SNAKE<br>
+        (and js is similar enoguh)<br>
+        So this is a google fireBASED message board
+        <br><br>
+    </p1>
+
+    <input type="text" id="textInput" placeholder="Enter link to image">
+    <button id="sendButton">Send it</button>
+
+    <p id="statusMessage"></p>
+
+    <h3>Stuff other people sent:</h2>
+    <div id="messagesContainer"></div>
+
+    <!-- Trust the docs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <!-- wawa script -->
+    <script> 
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8ae-pnlLYS-_iqrQaQtQvizj9Rsx3feQ",
+            authDomain: "dino-clubsmth.firebaseapp.com",
+            databaseURL: "https://dino-clubsmth-default-rtdb.firebaseio.com",
+            projectId: "dino-clubsmth",
+            storageBucket: "dino-clubsmth.firebasestorage.app",
+            messagingSenderId: "294014439617",
+            appId: "1:294014439617:web:4b737fbc78fbb74715c440",
+            measurementId: "G-TKD21PQKKL"
+        };
+
+        // Init and PRAY it works
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function sendTextToDatabase(textInput) {
+            const statusMessage = document.getElementById('statusMessage');
+            if (!textInput.trim()) {
+                statusMessage.textContent = "Write something pls"
+                return;
+            }
+
+            const messagesRef = database.ref('messages');
+            messagesRef.push({
+                link: textInput
+            })
+            .then(() => {
+                console.log("YIPEEEEEEE");
+                statusMessage.textContent = "YIPEE it worked";
+                document.getElementById('textInput').value = '';
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                statusMessage.textContent = `Error: ${error.message}`;
+            });
+
+            messagesRef.on('value', (snapshot) => {
+
+                messagesContainer.innerHTML = '';
+
+                snapshot.forEach((childSnapshot) => {
+                    const message = childSnapshot.val();
+                    const messageId = childSnapshot.key;
+
+                    const messageElement = document.createElement('img');
+                    messageElement.src = '$(message.link)'
+                    messageElement.alt = 'fail to find image'
+                    messageElement.style = "width:250px;height:auto;"
+                    messageElement.classList.add('database-message');
+                    messagesContainer.appendChild(messageElement);
+                });
+
+                // If there are no messages, display a placeholder
+                if (!snapshot.exists()) {
+                    messagesContainer.innerHTML = '<p>Send an image to see what everyone else wrote</p>';
+                }
+            });
+            }
+
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const textInputValue = document.getElementById('textInput').value;
+            sendTextToDatabase(textInputValue);
+        });
+    </script>
+</body>
 </html>
+
+
