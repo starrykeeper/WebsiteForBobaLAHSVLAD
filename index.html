@@ -74,7 +74,7 @@
                     const messageId = childSnapshot.key;
 
                     const messageElement = document.createElement('img');
-                    messageElement.src = '${message.text}';
+                    messageElement.src = `${message.link}`;
                     messageElement.alt = 'fail to find image';
                     messageElement.style = "width:250px;height:auto;";
                     messageElement.classList.add('database-message');
