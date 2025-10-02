@@ -74,28 +74,28 @@
                 statusMessage.textContent = `Error: ${error.message}`;
             });
 
-            messagesRef.on('value', (snapshot) => {
+        messagesRef.on('value', (snapshot) => {
 
-                messagesContainer.innerHTML = '';
+            messagesContainer.innerHTML = '';
 
-                snapshot.forEach((childSnapshot) => {
-                    const message = childSnapshot.val();
-                    const messageId = childSnapshot.key;
+            snapshot.forEach((childSnapshot) => {
+                const message = childSnapshot.val();
+                const messageId = childSnapshot.key;
 
-                    const messageElement = document.createElement('img');
-                    messageElement.src = `${message.link}`;
-                    messageElement.alt = 'fail to find image';
-                    messageElement.style = "width:250px;height:auto;";
-                    messageElement.classList.add('database-message');
-                    messagesContainer.appendChild(messageElement);
-                });
-
-                // If there are no messages, display a placeholder
-                if (!snapshot.exists()) {
-                    messagesContainer.innerHTML = '<p>Send an image to see what everyone else wrote</p>';
-                }
+                const messageElement = document.createElement('img');
+                messageElement.src = `${message.link}`;
+                messageElement.alt = 'fail to find image';
+                messageElement.style = "width:250px;height:auto;";
+                messageElement.classList.add('database-message');
+                messagesContainer.appendChild(messageElement);
             });
+
+            // If there are no messages, display a placeholder
+            if (!snapshot.exists()) {
+                messagesContainer.innerHTML = '<p>Send an image to see what everyone else wrote</p>';
             }
+        });
+        }
 
         document.getElementById('sendButton').addEventListener('click', () => {
             const textInputValue = document.getElementById('textInput').value;
