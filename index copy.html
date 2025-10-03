@@ -4,32 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FireBASED Snake Board</title>
-    <style>
-        body {background-color: rgb(228, 239, 239);}
-        h1 {
-            font-family: verdana;
-            font-size: 200%;
-            border: 3px solid powderblue;
-            text-align: center;
-        }
-        p1,p {
-            font-family: Helvetica, sans-serif;
-            text-align: center;
-        }
-        input,button {
-            text-align: center;
-            display: block;
-            margin: auto;
-        }
-    </style>
 </head>
 <body>
-    
-    <input type="text" id="textInput" placeholder="Enter link to image" style="width:400px;font-size:115%;">
-    <button id="sendButton" style="width:150px;height:30px;font-size:115%;">Send it!</button>
+    <h1>FireBASED Snake Board</h1>
+
+    <input type="text" id="textInput" placeholder="Enter link to image">
+    <button id="sendButton">Send it!</button>
 
     <p1 id="statusMessage"></p>
 
+    <h3>Stuff other people sent:</h2>
     <div id="messagesContainer"></div>
 
     <!-- Trust the docs -->
@@ -38,12 +22,6 @@
 
     <!-- wawa script -->
     <script> 
-
-        if (localStorage.getItem("sent") == 1) {
-            document.getElementById("sendButton").disabled = true;
-            document.getElementById("textInput").placeholder = "Already sent one";
-        }
-
         const firebaseConfig = {
             apiKey: "AIzaSyD8ae-pnlLYS-_iqrQaQtQvizj9Rsx3feQ",
             authDomain: "dino-clubsmth.firebaseapp.com",
@@ -68,40 +46,40 @@
 
             const messagesRef = database.ref('messages');
             messagesRef.push({
-                text: textInput
+                link: textInput
             })
             .then(() => {
                 console.log("YIPEEEEEEE");
                 statusMessage.textContent = "YIPEE it worked";
                 document.getElementById('textInput').value = '';
-                localStorage.setItem("sent", 1)
             })
             .catch((error) => {
                 console.error("Error:", error);
                 statusMessage.textContent = `Error: ${error.message}`;
             });
 
-        messagesRef.on('value', (snapshot) => {
+            messagesRef.on('value', (snapshot) => {
 
+                messagesContainer.innerHTML = '';
 
-            messagesContainer.innerHTML = '';
+                snapshot.forEach((childSnapshot) => {
+                    const message = childSnapshot.val();
+                    const messageId = childSnapshot.key;
 
-            snapshot.forEach((childSnapshot) => {
-                const message = childSnapshot.val();
-                const messageId = childSnapshot.key;
-                const messageElement = document.createElement('p');
-                messageElement.textContent = `${message.text}`;
-                // messageElement.style = "width:250px;height:auto;";
-                messageElement.classList.add('database-message');
-                messagesContainer.appendChild(messageElement);
+                    const messageElement = document.createElement('img');
+                    messageElement.src = `${message.link}`;
+                    messageElement.alt = 'fail to find image';
+                    messageElement.style = "width:250px;height:auto;";
+                    messageElement.classList.add('database-message');
+                    messagesContainer.appendChild(messageElement);
+                });
+
+                // If there are no messages, display a placeholder
+                if (!snapshot.exists()) {
+                    messagesContainer.innerHTML = '<p>Send an image to see what everyone else wrote</p>';
+                }
             });
-
-            // If there are no messages, display a placeholder
-            if (!snapshot.exists()) {
-                messagesContainer.innerHTML = '<p>Post a message to see what everyone else wrote</p>';
             }
-        });
-        }
 
         document.getElementById('sendButton').addEventListener('click', () => {
             const textInputValue = document.getElementById('textInput').value;
@@ -109,9 +87,7 @@
         });
     </script>
 </body>
-<footer>
-    <p style="color: rgb(171, 171, 171);font-size:90%;">Made by Vlad (@StarKeeper11)</p>
-</footer>
+
 </html>
 
 
