@@ -89,9 +89,9 @@
             snapshot.forEach((childSnapshot) => {
                 const message = childSnapshot.val();
                 const messageId = childSnapshot.key;
-                const messageElement = document.createElement('p');
-                messageElement.textContent = `${message.text}`;
-                // messageElement.style = "width:250px;height:auto;";
+                const messageElement = document.createElement('img');
+                messageElement.src = `${message.text}`;
+                messageElement.style = "width:250px;height:auto;";
                 messageElement.classList.add('database-message');
                 messagesContainer.appendChild(messageElement);
             });
