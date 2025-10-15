@@ -95,7 +95,7 @@
         messagesRef.on('value', (snapshot) => {
             console.log('recv',  snapshot);
 
-            messagesContainer.innerHTML = '';
+            //messagesContainer.innerHTML = '';
 
             snapshot.forEach((childSnapshot) => {
                 const message = childSnapshot.val();
